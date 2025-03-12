@@ -89,13 +89,13 @@ PORT=7000
 git clone https://github.com/YourUsername/Mess-Token-System.git
 
 # Navigate into the Student Server directory
-cd Mess-Token-System/student-server
+cd Mess-Token-System
 
 # Install dependencies
 npm install
 
 # Start the server
-node server.js  # or use nodemon for live reloading
+node student_server.js 
 ```
 
 ---
