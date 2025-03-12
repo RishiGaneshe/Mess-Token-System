@@ -13,8 +13,7 @@ A **secure and scalable Student Server** for the **Mess Token System**. This ser
 
 ## 📌 System Architecture
 
-![System Architecture](./path-to-your-architecture-image.png)  
-*(Replace `path-to-your-architecture-image.png` with the actual image path in the repo.)*
+![System Architecture](https://drive.google.com/uc?export=view&id=15ZqTNhEHkiiZdwKPFCfmaW_rN4zaC9-J)
 
 ## 🔥 Features  
 
