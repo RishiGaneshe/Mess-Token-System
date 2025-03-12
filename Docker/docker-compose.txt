@@ -1,0 +1,10 @@
+  
+  
+  *   Docker Compose File 
+
+cmd:  docker-compose up      ( to run combined containers in foreground )
+cmd:  docker-compose down    ( to stop the containers )
+cmd:  docker-compose up -d   ( to run the combined containers in background)
+cmd:  docker-compose down -v ( to stop and remove the containers )
+cmd:  docker-compose build   ( only build the image form the codes )
+cmd:  docker-compose up --build  ( first build image from the content/code and then start the container )

@@ -1,0 +1,79 @@
+
+     * Pulling Images in the docker *
+
+cmd :  docker pull <image_name>:<tag>
+ex.    docker pull node:latest
+
+cmd:   docker pull registry.example.com/my-image:latest
+ex.:   docker pull registry.rishiganeshe/my-image:latest
+
+
+cmd:         docker images
+result:      return all the images present in the docker
+
+cmd:         docker container ls
+result:      { return list of all active container }
+
+cmd:         docker container ls -a
+result:      { return list of all container }
+
+cmd:         docker inspect  < container name or id >
+result:      { detailed info about container }
+
+cmd:         docker logs <container_name>
+result:      { logs of the containers }
+
+cmd:         docker logs -f authorization_server
+result:      { shows real time logs }
+
+cmd:         docker ps
+result:      { shows the details of the containers }
+
+cmd:         doxcker rm   < container_name or id >
+result:      { remove the container }
+  
+
+
+     * Building the image using Dockerfile * 
+
+cmd:         docker build -t  node_server:2.0  . 
+
+result:      { 
+               * docker build       →   The command to build a Docker image.
+               * -t my-app:1.0      →   Tags the image with a name (my-app) and a version (2.0).
+                                           If no tag is provided, Docker uses latest as the default.
+                                           Example: my-app:latest
+               * . (dot)            →   The build context (current directory).
+                                        Docker searches for the Dockerfile in this directory.
+             }
+
+
+
+
+     *  Running container from image *
+
+
+cmd:        docker run -it --name authorization_server -p 7001:7001 authorization_server:latest
+
+result:     {  
+                docker run                       →      Starts a new container.
+                -it                              →      Runs the container in interactive mode with a terminal.
+                --name { nameOfContainer }       →      Assigns the name authorization_server to the container.
+                -p 7001:7001                     →      Maps port 7001 of the container to 7001 on the host. (First mentioned porst is of HOST)
+                authorization_server:latest      →      Specifies the image to use (image name: authorization_server, tag: latest).
+            }
+
+
+
+
+      *  Accessing the shell of the running container
+
+cmd:        docker  exec  -it   <container_name or id>   /bin/bash
+
+explaination:    {  
+                    -i         →    Interactive mode.
+                    -t         →    Allocates a pseudo-TTY (terminal).
+                    /bin/bash  →    Starts a Bash shell (if available).
+                 }
+
+    
