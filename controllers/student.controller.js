@@ -7,7 +7,8 @@ const Token= require('../models/tokenSchema.js')
 const { hashPassword, verifyPassword}= require('../services/passwordHashing.js')
 const Transaction= require('../models/transactionSchema.js')
 const Notification= require('../models/notificationForOwner.js')
-
+const TokenSubmission= require('../models/submittedTokenSchema.js')
+const shortid = require('shortid')
 
 
 exports.handleHelloStudent= async(req,res)=>{
@@ -81,6 +82,17 @@ exports.handlePostTokenSubmission= async (req,res)=>{
             { $set: { redeemed: true } },
             { session }
         )
+
+        const submissionId= shortid.generate()
+        await TokenSubmission.create([{
+            submissionId: "TS-"+submissionId,
+            user: userId,
+            username: username,
+            mess_id: mess_id,
+            tokenCount: tokenIds.length,
+            tokenIds: tokenIds,
+            status: "submitted"
+        }], { session })
 
         await Notification.create([{
             mess_id: mess_id,
