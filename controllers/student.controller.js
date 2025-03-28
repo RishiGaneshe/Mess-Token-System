@@ -249,6 +249,34 @@ exports.handleGetPaymentHistory= async(req, res)=>{
 }
 
 
+exports.handleGetTokenSubmissionData= async (req, res)=>{
+    try{
+        const userId= req.user.id
+        const username= req.user.username
+        const mess_id= req.user.mess_id
+
+        if (!userId || !username || !mess_id) {
+            return res.status(400).json({ success: false, message: "Username and Mess ID does not found" })
+        }
+
+        const submissions = await TokenSubmission.find({ username, mess_id })
+                                     .select('_id submissionId username mess_id tokenCount status submittedAt')
+                                     .lean()
+
+        if (submissions.length === 0) {
+            return res.status(404).json({ success: false, message: "No token submissions found." })
+        }
+         
+        console.log("Token Submission data sent.")
+        return res.status(200).json({ success: true, data: submissions })
+
+    }catch(err){
+        console.error('Error fetching tokens submission data:', err)
+        return res.status(500).json({ success: false, message: 'Internal Server Error ' })
+    }
+}
+
+
 exports.handlePostStudentLogout= async (req,res)=>{
     try{
         const authHeader= req.headers['authorization']
