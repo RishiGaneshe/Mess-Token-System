@@ -12,6 +12,8 @@ router.get("/token-history", Student.handleGetTokenHistory)
 
 router.get("/payment-history", Student.handleGetPaymentHistory)
 
+router.get("/submitted-tokens", Student.handleGetTokenSubmissionData)
+
 router.post("/student-dashboard", Student.handleHelloStudent )
 
 router.post("/token-submission", Student.handlePostTokenSubmission)
