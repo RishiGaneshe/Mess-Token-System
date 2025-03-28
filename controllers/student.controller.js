@@ -9,6 +9,7 @@ const Transaction= require('../models/transactionSchema.js')
 const Notification= require('../models/notificationForOwner.js')
 const TokenSubmission= require('../models/submittedTokenSchema.js')
 const shortid = require('shortid')
+const StudentProfile= require('../models/studentProfile.js')
 
 
 exports.handleHelloStudent= async(req,res)=>{
@@ -275,6 +276,87 @@ exports.handleGetTokenSubmissionData= async (req, res)=>{
         return res.status(500).json({ success: false, message: 'Internal Server Error ' })
     }
 }
+
+
+exports.handleGetProfileData= async(req, res)=>{
+    try{
+        const username= req.user.username
+        const mess_id= req.user.mess_id
+
+        if (!username || !mess_id) {
+            return res.status(400).json({ success: false, message: "Username and mess_id are required." })
+        }
+
+        const userProfile = await StudentProfile.findOne({ username, mess_id }).lean()
+        if (!userProfile) {
+            return res.status(404).json({ success: false, message: "Profile not found." })
+        }
+
+        console.log("Send Profile Data.")
+        return res.status(200).json({ success: true, data: userProfile })
+
+    }catch(err){
+        console.error("Error fetching user profile:", err.message)
+        return res.status(500).json({ success: false, message: "Internal Server Error" })
+    }
+}
+
+
+
+exports.handlePatchStudentProfile= async(req, res)=>{
+    const session = await mongoose.startSession()
+    try{
+        const username = req.user.username
+        const mess_id = req.user.mess_id
+        const updates= req.body
+
+        if (!username || !mess_id ) {
+            return res.status(400).json({ success: false, message: "Required Data is not present" })
+        }
+
+        const allowedFields = [
+            "fullName", "bio", "profileImage", "phone", "address", 
+            "profession", "age", "dateOfBirth"
+        ]
+
+        const updateFields = {}
+        for (const key of Object.keys(updates)) {
+            if (allowedFields.includes(key)) {
+                updateFields[key] = updates[key];
+            }
+        }
+
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).json({ success: false, message: "No valid fields provided for update." })
+        }
+
+        session.startTransaction()
+        const updatedProfile = await StudentProfile.findOneAndUpdate(
+            { username, mess_id },
+            { $set: updateFields },
+            { new: true, session }
+        ).lean();
+
+        if (!updatedProfile) {
+            await session.abortTransaction();
+            return res.status(404).json({ success: false, message: "User Profile not found." })
+        }
+
+        console.log("Profile Updated Successfully.")
+        await session.commitTransaction()
+        return res.status(200).json({ success: true, message: "Profile updated successfully.", data: updatedProfile })
+        
+    }catch(err){
+        if (session.inTransaction()) {
+            await session.abortTransaction();
+        }
+        console.error("Error updating user profile:", err.message)
+        return res.status(500).json({ success: false, message: "Internal Server Error" })
+
+    }finally{
+        session.endSession()
+    }
+} 
 
 
 exports.handlePostStudentLogout= async (req,res)=>{
