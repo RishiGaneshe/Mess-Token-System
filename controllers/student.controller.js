@@ -6,6 +6,7 @@ const User= require('../models/signUpSchema.js')
 const Token= require('../models/tokenSchema.js')
 const { hashPassword, verifyPassword}= require('../services/passwordHashing.js')
 const Transaction= require('../models/transactionSchema.js')
+const Notification= require('../models/notificationForOwner.js')
 
 
 
@@ -80,6 +81,19 @@ exports.handlePostTokenSubmission= async (req,res)=>{
             { $set: { redeemed: true } },
             { session }
         )
+
+        await Notification.create([{
+            mess_id: mess_id,
+            student: userId,
+            student_username: username,
+            type: "token",
+            title: "Token Submitted",
+            message: `${username} has submitted ${tokenIds.length} tokens.`,
+            data: { tokenCount: tokenIds.length, tokenIds },
+            notificationType: "both",
+            pushSent: false,
+            pushResponse: null
+        }], { session })
         
         await session.commitTransaction()
 
