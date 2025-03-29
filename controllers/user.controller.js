@@ -218,7 +218,7 @@ exports.handlePostSendPasswordResetOTP= async(req, res)=>{
             return res.status(400).json({ success: false, message: "Username, email, mess id and role are required." });
         }
 
-        const user= await User.findOne({ email, username, mess_id, role})
+        const user= await adminData.findOne({ email, username, mess_id, role})
         if (!user) {
             return res.status(400).json({ success: false, message: "No user found with the provided data." });
         }
