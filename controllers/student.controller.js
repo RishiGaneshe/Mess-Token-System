@@ -262,6 +262,7 @@ exports.handleGetTokenSubmissionData= async (req, res)=>{
 
         const submissions = await TokenSubmission.find({ username, mess_id })
                                      .select('_id submissionId username mess_id tokenCount status submittedAt')
+                                     .sort({ submittedAt: -1 })
                                      .lean()
 
         if (submissions.length === 0) {
