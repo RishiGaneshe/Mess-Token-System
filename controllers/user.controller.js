@@ -45,14 +45,14 @@ exports.handleSendEmailForSignUp = async (req, res) => {
         const hashedPassword = await hashPassword(password)
 
         try{
-            await adminData.create({
+            await adminData.create([{
                 username: username,
                 email: email,
                 password: hashedPassword,
                 role: role,
                 isActive: false,
                 mess_id : mess_id
-            }, { session })
+            }], { session })
             
         }catch(err){
             console.error("Error in user data submission: "+ err.message)
@@ -62,12 +62,12 @@ exports.handleSendEmailForSignUp = async (req, res) => {
         const otp = crypto.randomInt(100000, 999999).toString()
 
         try{
-             await OTP.create({
+             await OTP.create([{
                 email: email,
                 mess_id: mess_id,
                 otp: otp,
                 createdAt: new Date(), 
-            }, { session })
+            }], { session })
             
         }catch(err){
             console.error("Error in OTP Storing: "+ err.message)
@@ -137,14 +137,14 @@ exports.handlePostVerifyOTP = async (req, res) => {
               
             await OTP.deleteOne({ email, mess_id }).session(session)
 
-            await Profile.create({
+            await Profile.create([{
                 user: updatedAdmin._id, 
                 username: updatedAdmin.username,
                 email: email,
                 role: updatedAdmin.role,
                 isActive: true, 
                 mess_id: mess_id,
-            })
+            }], {session})
         }catch(err){
             throw err
         }
