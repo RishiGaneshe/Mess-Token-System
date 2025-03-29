@@ -8,7 +8,7 @@ exports.sendSignUpOTP= async (email, otp) =>{
         to: email,
         from: 'info.dakshifoundation@gmail.com',
         subject: 'Your OTP code for Creating account',
-        text: `Your OTP is: ${otp}. Do not share this OTP. OTP will be valid for 2 minutes only.`
+        text: `Dear User,\n\nYour One-Time Password (OTP) is: ${otp}.\n\nPlease do not share this OTP with anyone. It is valid for only 2 minutes.\n\nRegards,\nMTS`
     }
 
     try{
