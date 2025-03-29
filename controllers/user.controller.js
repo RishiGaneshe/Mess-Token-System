@@ -2,7 +2,7 @@ const crypto = require('crypto')
 const validator = require('validator')
 const adminData = require('../models/signUpSchema.js')
 const OTP= require('../models/otpSchema.js') 
-const { sendSignUpOTP } = require('../services/emailServices.js')
+const { sendSignUpOTP, sendForgetPassOTP } = require('../services/emailServices.js')
 const { hashPassword, verifyPassword}= require('../services/passwordHashing.js')
 const { createJwtToken, verifyToken, decodeToken }= require('../services/jwtToken.js')
 const secret= process.env.Secret
@@ -209,5 +209,38 @@ exports.handlePostUserLogin= async (req, res)=>{
         return res.status(500).json({ success: false, message: "Internal Server Error."})
     }
 }
+
+
+exports.handlePostSendPasswordResetOTP= async(req, res)=>{
+    try{
+        const { email, username, mess_id, role }= req.body
+        if (!username || !email || !mess_id || !role ) {
+            return res.status(400).json({ success: false, message: "Username, email, mess id and role are required." });
+        }
+
+        const user= await User.findOne({ email, username, mess_id, role})
+        if (!user) {
+            return res.status(400).json({ success: false, message: "No user found with the provided data." });
+        }
+
+        const otp = crypto.randomInt(100000, 999999).toString()
+
+        await OTP.create([{
+            email: email,
+            mess_id: mess_id,
+            otp: otp,
+            createdAt: new Date(), 
+        }])
+
+        await sendForgetPassOTP(email, otp)
+        console.log("OTP Sent for Password reset.")
+        return res.status(200).json({ success: true, message: "OTP sent successfully for password reset.", email: user.email })
+
+    }catch(err){
+        console.error("Error in sending email for pass. reset API: ", err.message)
+        return res.status(500).json({ success: false, message: "Internal Server Error."})
+    }
+}
+
     
 
