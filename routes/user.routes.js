@@ -9,5 +9,7 @@ router.post("/sign-up/otp-verify", User.handlePostVerifyOTP)
 
 router.post("/login", User.handlePostUserLogin)
 
+router.post("/password-reset", User.handlePostSendPasswordResetOTP)
+
 
 module.exports= router
