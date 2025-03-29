@@ -208,7 +208,7 @@ exports.handleGetTokenHistory= async(req, res)=>{
                 return res.status(400).json({ success: false, message: 'Invalid user ID' })
             }
 
-        const tokens = await Token.find({ user: userId, mess_id : mess_id }).sort({ createdAt: -1 })
+        const tokens = await Token.find({ user: userId, mess_id : mess_id }).sort({ purchaseDate: -1 })
             if (!tokens.length) {
                 return res.status(404).json({ success: false, message: 'No tokens found for this user' })
             }
