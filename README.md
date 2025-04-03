@@ -45,12 +45,12 @@ A **secure and scalable Student Server** for the **Mess Token System**. This ser
 ### 🔹 **3. Balance Management**
 | Method | Endpoint | Description |
 |--------|---------|-------------|
-| **GET** | `/tokens` | Fetches the current available token count of the student. |
-| **GET** | `/token-data` | Fetches the not redeemed tokens data of student. |
-| **GET** | `/token-history` | Fetches total issued token's history for that perticular user.|
+| **GET** | `/student/tokens` | Fetches the current available token count of the student. |
+| **GET** | `/student/token-data` | Fetches the not redeemed tokens data of student. |
+| **GET** | `/student/token-history` | Fetches total issued token's history for that perticular user.|
 | **GET** | `/payment-history` | Fetches payment history made by perticular user to purchase tokens.|
-| **POST** | `/token-submission` | Submit the token by user with security code to prevent un-intensional token submission. |
-| **POST** | `/logout` | Logout the user.. |
+| **POST** | `/student/token-submission` | Submit the token by user with security code to prevent un-intensional token submission. |
+| **POST** | `/student/logout` | Logout the user.. |
 
 > 🛡 **Authentication & Authorization:** All endpoints require **JWT authentication**.
 
