@@ -5,6 +5,7 @@ const crypto= require('crypto')
 const User= require('../models/signUpSchema')
 const mongoose= require('mongoose')
 const Transaction= require('../models/transactionSchema')
+const Notification= require('../models/notificationForOwner')
 
 
 
@@ -151,6 +152,26 @@ exports.handleVerifyPayments= async (req,res)=>{
              await session.abortTransaction()
              console.error("Error in Token Issue API", err.message)
              return res.status(500).json({ success: false, error: "Internal Server Error", message: "Error in issueing tokens.Try again later."})
+        }
+
+        try{
+            await Notification.create([{
+                mess_id: req.user.mess_id,         
+                student: user._id,
+                student_username: user.username,   
+                type: "transaction",
+                title: "Token Purchased",
+                message: `${user.username} has purchased ${tokenCount} tokens.`,
+                data: { tokenCount: tokenCount },
+                notificationType: "both",
+                pushSent: false,
+                pushResponse: null
+            }], { session })
+
+        }catch(err){
+            await session.abortTransaction()
+            console.error("Error in Token Issue API", err.message)
+            return res.status(500).json({ success: false, error: "Internal Server Error", message: "Error in issueing tokens.Try again later."})
         }
         
         await session.commitTransaction()
