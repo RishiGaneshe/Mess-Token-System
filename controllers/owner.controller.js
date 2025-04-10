@@ -1,6 +1,7 @@
 const { verifyToken }= require('../services/jwtToken.js')
 const secret= process.env.Secret
 const { redisClient } = require("../services/redisConnection")
+const Notification= require('../models/notificationForOwner.js')
 
 
 
@@ -12,6 +13,29 @@ exports.handleHelloOwner= async(req,res)=>{
     }catch(err){
         console.error("Error in Hello Owner API "+ err.message)
         return res.status(500).json({ success: false, message: "Internal Server Error" })
+    }
+}
+
+
+exports.handleNotificationForOwner= async(req, res)=>{
+    try{
+        const mess_id= req.user.mess_id
+        if (!mess_id) {
+            return res.status(400).json({ success: false, message: 'mess_id is required.' })
+        }
+        const notifications= await Notification.find({ mess_id })
+                                .select('type title message student_username data notificationType createdAt')
+                                .sort( { createdAt: -1})
+        if(!notifications) {
+            return res.status(404).json({ success: false, message: 'no notifications for the user.' })
+        }
+        
+        console.log("notification for owner sent successfully.")
+        return res.status(200).json({ success: true, count: notifications.length, data: notifications })
+
+    }catch(err){
+        console.error('Error fetching notifications:', err.message)
+        return res.status(500).json({ success: false, message: 'Internal Server Error.' });
     }
 }
 
