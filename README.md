@@ -86,7 +86,7 @@ PORT=7000
 
 ```sh
 # Clone the repository
-git clone https://github.com/YourUsername/Mess-Token-System.git
+git clone https://github.com/RishiGaneshe/Mess-Token-System.git
 
 # Navigate into the Student Server directory
 cd Mess-Token-System
